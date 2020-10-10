@@ -3,9 +3,14 @@ const fs = require('fs');
 const inquirer = require('inquirer');
 const path = require('path');
 const generateHTML = require('./src/generateHTML');
+const Manager = require('./lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
 
-// Questions Array
-const questions = [
+// Team Members Array
+const teamArray = [];
+// Manager Questions Array
+const managerQuestions = [
     {
         type: 'input',
         name: 'name',
@@ -22,36 +27,128 @@ const questions = [
         message: 'Please enter the employee email:'
     },
     {
-        type: 'checkbox',
-        name: 'role',
-        message: 'Please choose the role of the employee:',
-        choices: ['Manager', 'Engineer', 'Intern']
+        type: 'input',
+        name: 'officeNumber',
+        message: 'Please enter the office number:'
     },
-]
+];
+// Engineer Questions Array
+const engineerQuestions = [
+    {
+        type: 'input',
+        name: 'name',
+        message: 'Please enter the name of the engineer:'
+    },
+    {
+        type: 'input',
+        name: 'id',
+        message: 'Please enter the id number of the engineer:'
+    },
+    {
+        type: 'input',
+        name: 'email',
+        message: 'Please enter the email of the engineer:'
+    },
+    {
+        type: 'input',
+        name: 'github',
+        message: 'Please enter the github username of the engineer:'
+    },
+];
+// Intern Questions Array
+const internQuestions = [
+    {
+        type: 'input',
+        name: 'name',
+        message: 'Please enter the name of the intern:'
+    },
+    {
+        type: 'input',
+        name: 'id',
+        message: 'Please enter the id number of the intern:'
+    },
+    {
+        type: 'input',
+        name: 'email',
+        message: 'Please enter the email of the intern:'
+    },
+    {
+        type: 'input',
+        name: 'school',
+        message: 'Please enter the school of the intern:'
+    },
+];
 
-// Generate Questions
-const promptTeam = teamData => {
+// Generate Questions for the manager
+const promptManager = () => {
     console.log(`
-====================
-Enter Your Employees
-====================
-`);
-// If there's no 'employees' array property, creates one
-if (!teamData.employees) {
-    teamData.employees = [];
-}
-return inquirer.prompt(questions)
-.then(employeeData => {
-    teamData.employees.push(employeeData);
-    if (employeeData.confirmAddEmployee) {
-        return promptTeam(teamData);
-    } else {
-        return teamData;
-    }
-}).then(answers => {
-    const html = generateHTML(answers);
-    writeToFile('employees.html', html);
-});
+    ==================
+    Enter Your Manager
+    ==================
+    `);
+    inquirer.prompt(managerQuestions)
+    .then(employeeData => {
+        let manager = new Manager(employeeData.name, employeeData.id, employeeData.email, employeeData.officeNumber);
+        teamArray.push(manager);
+        promptTeam();
+    })
+};
+
+const promptTeam = () => {
+        console.log(`
+    ====================
+    Enter Your Employees
+    ====================
+    `);
+
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'employeeRole',
+            message: 'What kind of employee would you like to add?',
+            choices: ['Engineer', 'Intern', 'done']
+        }
+    ])
+    .then(answer => {
+        if (answer.employeeRole == 'Engineer') {
+            promptEngineer();
+        }
+        if (answer.employeeRole == 'Intern') {
+            promptIntern();
+        } else {
+            writeToFile('Employee.html',  generateHTML(teamArray));
+        }
+    });
+};
+
+// Generate Questions for the engineers
+const promptEngineer = () => {
+    console.log(`
+    ===================
+    Enter Your Engineer
+    ===================
+    `);
+    inquirer.prompt(engineerQuestions)
+    .then(employeeData => {
+        let engineer = new Engineer(employeeData.name, employeeData.id, employeeData.email, employeeData.github);
+        teamArray.push(engineer);
+        promptTeam();
+    })
+
+};
+// Generate Questions for the Interns
+const promptIntern = () => {
+    console.log(`
+    =================
+    Enter Your Intern
+    =================
+    `);
+    inquirer.prompt(internQuestions)
+    .then(employeeData => {
+        let intern = new Intern(employeeData.name, employeeData.id, employeeData.email, employeeData.school);
+        teamArray.push(intern);
+        promptTeam();
+    })
 };
 
 // Function to write HTML file
@@ -63,7 +160,7 @@ function writeToFile(fileName, data) {
 
 // Function to initialize program
 function init() {
-    promptTeam();
+    promptManager();
 };
 
 // Function call to initialize program
