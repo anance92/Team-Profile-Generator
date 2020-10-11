@@ -106,7 +106,7 @@ const promptTeam = () => {
             type: 'list',
             name: 'employeeRole',
             message: 'What kind of employee would you like to add?',
-            choices: ['Engineer', 'Intern', 'done']
+            choices: ['Engineer', 'Intern', 'Done']
         }
     ])
     .then(answer => {
@@ -115,7 +115,7 @@ const promptTeam = () => {
         }
         if (answer.employeeRole == 'Intern') {
             promptIntern();
-        } else {
+        } else if (answer.employeeRole == 'Done') {
             writeToFile('Employee.html',  generateHTML(teamArray));
         }
     });
