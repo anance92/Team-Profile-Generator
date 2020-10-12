@@ -17,7 +17,7 @@ function generateHTML(data) {
         `;
         } if (data[i].getRole() == `Engineer`) {
             employeecards = employeecards + `
-            <h2>GitHub Username : </h2><a href="github.com/${data[i].github}">${data[i].github}</a>
+            <h2>GitHub Username : </h2><a href="https://github.com/${data[i].github}/">${data[i].github}</a>
         </div>
     </div>
         `;
