@@ -2,25 +2,30 @@ function generateHTML(data) {
     
     var employeecards = ``;
     for (let i = 0; i < data.length; i++) {
-        employeecards = employeecards + `<div class="employeeCard box">
-            <h1>${data[i].getRole()}</h1> 
-            <h2>Name : ${data[i].name}</h2>
+        employeecards = employeecards + `<div class="column">
+        <div class="employeeCard box">
+            <h1 class="title">${data[i].name}</h1>
+            <h1 class="title is-4">${data[i].getRole()}</h1> 
             <h2>ID : ${data[i].id}</h2>
-            <h2>Email : ${data[i].email}</h2>`;
+            <h2>Email :</h2><a href="mailto:${data[i].email}">${data[i].email}</a>
+            `;
         if (data[i].getRole() == `Manager`) {
             employeecards = employeecards + `
             <h2>Office Number : ${data[i].officeNumber}</h2>
         </div>
+    </div>
         `;
         } if (data[i].getRole() == `Engineer`) {
             employeecards = employeecards + `
-            <h2>GitHub Username : ${data[i].github}</h2>
+            <h2>GitHub Username : </h2><a href="github.com/${data[i].github}">${data[i].github}</a>
         </div>
+    </div>
         `;
         } else if (data[i].getRole() == `Intern`) {
             employeecards = employeecards + `
             <h2>School : ${data[i].school}</h2>
         </div>
+    </div>
         `;
         }
     };
@@ -41,10 +46,9 @@ function generateHTML(data) {
             <div class="hero-body">
                 <div class="container">
                     <h1 class="title">
-                        My Team Members
+                        My Team
                     </h1>
                     <h2 class="subtitle">
-                        A Webpage Made By You
                     </h2>
                 </div>
             </div>
